@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "misskey-rust",
+    "misskey-js-rust",
+    "mfm-rs",
+]
+
+resolver = "2"
