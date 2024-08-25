@@ -91,13 +91,107 @@ impl MfmNodeFn for MfmQuote {
     pub fn get_props(&self) -> Option<HashMap<String, JsonValue>> { self::props }
 }
 
-fn quote(child: Vec<MfmNode>) -> NodeType {
-    NodeType::Quote({
+fn quote(child: Vec<MfmNode>) -> MfmNode {
+    Block(Quote({
         children: child,
-    })
+    }))
 }
 
-// Implement traits to MfmQuote and continue from MfmSearch
+#[derive(clone)]
+struct MfmSearch {
+    props: MfmSearchProps,
+    children: Option<Vec<MfmNode>>,
+}
+
+#[derive(clone)]
+struct MfmSearchProps {
+    query: String,
+    content: String,
+}
+
+impl MfmNodeType for MfmQuote {
+    const r#type = "search";
+}
+
+impl MfmNodeFn for MfmSearch {
+    pub fn get_type(&self) -> &str { self::type }
+    pub fn get_props(&self) -> Option<HashMap<String, JsonValue>> {
+        Some({
+            "query".to_string(): JsonValue::String(props.query),
+            "content".to_string(): JsonValue::String(props.content),
+        })
+    }
+}
+
+impl MfmSearch {
+    pub fn get_children(&self) -> Option<Vec<MfmNode>> { self::children }
+}
+
+fn search(query: String, content: String) -> MfmNode {
+    Block(Search({
+        props: {
+            query: query,
+            content: content,
+        }
+    }))
+}
+
+#[derive(clone)]
+struct MfmMathBlock {
+    props: MfmMathProps,
+    children: Option<Vec<MfmNode>>,
+}
+
+#[derive(clone)]
+struct MfmMathProps {
+    formula: String,
+}
+
+impl MfmNodeType for MfmMathBlock {
+    const r#type = "mathBlock";
+}
+
+impl MfmNodeFn for MfmMathBlock {
+    pub fn get_type(&self) -> &str { self::type }
+    pub fn get_props(&self) -> Option<HashMap<String, JsonValue>> {
+        Some({
+            "formula".to_string(): props.formula,
+        })
+    }
+}
+
+fn mathBlock(formula: String) -> MfmNode {
+    Block(MathBlock({
+        props: {
+            formula: formula,
+        },
+    }))
+}
+
+struct MfmCenter {
+    props: Option<HashMap<String, JsonValue>>,
+    children: Vec<MfmInline>,
+}
+
+impl MfmNodeType for MfmCenter {
+    const r#type = "center";
+}
+
+impl MfmNodeFn for MfmCenter {
+    pub fn get_type(&self) -> &str {
+        self::type
+    }
+    pub fn get_props(&self) -> Option<HashMap<String, JsonValue>> {
+        self::props
+    }
+}
+
+impl MfmCenter {
+    pub fn get_children(&self) -> Vec<MfmInline> {
+        self::children
+    }
+}
+// continue from MfmInline
 // src: gh::raspberry-garage/mfm-js::develop::src/node
 //impl 
 

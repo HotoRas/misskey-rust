@@ -164,6 +164,15 @@ pub const moderationLogTypes: [&str; 44] = [
     "unsetUserBanner",
 ];
 
+pub const reversiUpdateKeys: [&str; 6] = [
+    "map",
+    "bw",
+    "isLlotheo",
+    "canPutEverywhere",
+    "loopedBoard",
+    "timeLimitForEachRun",
+]
+
 pub mod ModerationLogPayloads {
     use std::collections::HashMap;
 
